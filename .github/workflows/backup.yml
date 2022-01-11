@@ -34,13 +34,13 @@ jobs:
       
       - name: Commit changes to backup repo
         env:
-          REPO_EMAIL: ${{ secrets.REPO_EMAIL }}
-          REPO_USERNAME: ${{ secrets.REPO_USERNAME }}
+          GIT_EMAIL: ${{ secrets.GIT_EMAIL }}
+          GIT_USERNAME: ${{ secrets.GIT_USERNAME }}
         run: |
           cp -a backup/. notion-backup/backup/
           cd notion-backup
-          git config --local user.email "${REPO_EMAIL}"
-          git config --local user.name "${REPO_USERNAME}"
+          git config --local user.email "${GIT_EMAIL}"
+          git config --local user.name "${GIT_USERNAME}"
           stats="$(git diff --shortstat | xargs)"
           if [ -z "${stats}" ]; then stats=none; fi
           printf "Updated: %s\n\nUpdates: %s" "$(date)" "$stats" > README.md

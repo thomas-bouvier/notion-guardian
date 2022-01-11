@@ -8,12 +8,12 @@ The tool separates the logic for running the export and the actual workspace dat
 
 ## How to setup
 
-1. Create a separate private repository for your backups to live in (e.g. "my-notion-backup"). Make sure you create a `main` branch — for example by clicking "Add a README file" when creating the repo.
+1. Create a separate private repository for your backups to live in (e.g. "notion-backup"). Make sure you create a `main` branch — for example by clicking "Add a README file" when creating the repo.
 2. Fork this repository ("notion-guardian").
 3. Create a Personal Access Token ([docs](https://docs.github.com/en/free-pro-team@latest/github/authenticating-to-github/creating-a-personal-access-token)) with the "repo" scope and store it as `REPO_PERSONAL_ACCESS_TOKEN` in the secrets of the forked repo.
 4. Store your GitHub username in the `REPO_USERNAME` secret.
-5. Store the name of your newly created private repo in the `REPO_NAME` secret (in this case "my-notion-backup").
-6. Store the email that should be used to commit changes (usually your GitHub account email) in the `REPO_EMAIL` secret.
+5. Store the name of your newly created private repo in the `REPO_NAME` secret (in this case "notion-backup").
+6. Store the email that should be used to commit changes (usually your GitHub account email) in the `GIT_EMAIL` secret as well as your name in `GIT_USERNAME`.
 7. Obtain your Notion space-id and token as described [in this Medium post](https://medium.com/@arturburtsev/automated-notion-backups-f6af4edc298d). Store it in the `NOTION_SPACE_ID` and `NOTION_TOKEN` secret.
 8. You will also need to obtain your `notion_user_id` the same way and store it in a `NOTION_USER_ID` secret.
 9. Click the "Actions" tab on the forked repo and enable actions by clicking the button.
