@@ -36,7 +36,7 @@ const exportFromNotion = async (destination, format) => {
       spaceId: NOTION_SPACE_ID,
       exportOptions: {
         exportType: format,
-        timeZone: `Europe/Berlin`,
+        timeZone: `Europe/Paris`,
         locale: `en`,
       },
     },
@@ -86,14 +86,14 @@ const exportFromNotion = async (destination, format) => {
 };
 
 const run = async () => {
-  const workspaceDir = join(process.cwd(), `workspace`);
-  const workspaceZip = join(process.cwd(), `workspace.zip`);
+  const backupDir = join(process.cwd(), `backup`);
+  const backupZip = join(process.cwd(), `backup.zip`);
 
-  await exportFromNotion(workspaceZip, `markdown`);
-  await rm(workspaceDir, { recursive: true, force: true });
-  await mkdir(workspaceDir, { recursive: true });
-  await extract(workspaceZip, { dir: workspaceDir });
-  await unlink(workspaceZip);
+  await exportFromNotion(backupZip, `markdown`);
+  await rm(backupDir, { recursive: true, force: true });
+  await mkdir(backupDir, { recursive: true });
+  await extract(backupZip, { dir: backupDir });
+  await unlink(backupZip);
 
   console.log(`✅ Export downloaded and unzipped.`);
 };

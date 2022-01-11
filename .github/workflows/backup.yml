@@ -30,20 +30,20 @@ jobs:
         with:
           repository: ${{ secrets.REPO_USERNAME }}/${{ secrets.REPO_NAME }}
           token: ${{ secrets.REPO_PERSONAL_ACCESS_TOKEN }}
-          path: "backup-repo"
+          path: "notion-backup"
       
       - name: Commit changes to backup repo
         env:
           REPO_EMAIL: ${{ secrets.REPO_EMAIL }}
           REPO_USERNAME: ${{ secrets.REPO_USERNAME }}
         run: |
-          cp -a workspace/. backup-repo/
-          cd backup-repo
+          cp -a backup/. notion-backup/backup/
+          cd notion-backup
           git config --local user.email "${REPO_EMAIL}"
           git config --local user.name "${REPO_USERNAME}"
-          git add .
-          if [ -z "$(git status --porcelain)" ]; then
-            exit 0
-          fi
-          git commit -m "Automated Notion workspace backup"
+          stats="$(git diff --shortstat | xargs)"
+          if [ -z "${stats}" ]; then stats=none; fi
+          printf "Updated: %s\n\nUpdates: %s" "$(date)" "$stats" > README.md
+          git add backup README.md
+          git commit -m "Updates: $stats"
           git push
