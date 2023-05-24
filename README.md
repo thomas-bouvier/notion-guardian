@@ -42,3 +42,10 @@ Automatically downloading backups from Notion requires two unique authentication
 ## How it works
 
 This repo contains a GitHub workflow that runs every day and for every push to this repo. The workflow will execute the script which makes an export request to Notion, waits for it to finish and downloads the workspace content to a temporary directory. The workflow will then commit this directory to the repository configured in the repo secrets.
+
+## Running manually
+
+```console
+npm i
+NOTION_SPACE_ID=xxx NOTION_USER_ID=xxx NOTION_TOKEN=xxx node index.js
+```

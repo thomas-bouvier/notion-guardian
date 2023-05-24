@@ -1,11 +1,12 @@
-const axios = require(`axios`);
-const extract = require(`extract-zip`);
-const { createWriteStream } = require(`fs`);
-const { rm, mkdir, unlink } = require(`fs/promises`);
-const { join } = require(`path`);
+import axios from "axios";
+import extract from "extract-zip";
+import { createWriteStream } from "fs";
+import { rm, rmdir, mkdir, unlink, readdir, rename } from "fs/promises";
+import { join } from "path";
 
 const notionAPI = `https://www.notion.so/api/v3`;
 const { NOTION_TOKEN, NOTION_SPACE_ID, NOTION_USER_ID } = process.env;
+
 const client = axios.create({
   baseURL: notionAPI,
   headers: {
@@ -28,6 +29,39 @@ const sleep = async (seconds) => {
 };
 
 const round = (number) => Math.round(number * 100) / 100;
+
+async function moveFoldersContents(backupDir) {
+  try {
+    const files = await readdir(backupDir, { withFileTypes: true });
+
+    for (const file of files) {
+      const filePath = join(backupDir, file.name);
+
+      if (file.isDirectory()) {
+        await moveDirectoryContents(filePath, backupDir);
+        console.log(`Moved contents of ${filePath} to ${backupDir}`);
+        await rmdir(filePath)
+      }
+    }
+  } catch (err) {
+    console.error('Error reading directory:', err);
+  }
+}
+
+async function moveDirectoryContents(sourceDir, destinationDir) {
+  try {
+    const files = await readdir(sourceDir);
+
+    for (const file of files) {
+      const sourceFile = join(sourceDir, file);
+      const destinationFile = join(destinationDir, file);
+
+      await rename(sourceFile, destinationFile);
+    }
+  } catch (err) {
+    console.error(`Error moving contents of ${sourceDir}:`, err);
+  }
+}
 
 const exportFromNotion = async (destination, format) => {
   const task = {
@@ -102,6 +136,14 @@ const run = async () => {
   await mkdir(backupDir, { recursive: true });
   await extract(backupZip, { dir: backupDir });
   await unlink(backupZip);
+
+  const files = await readdir(backupDir);
+  for (const file of files) {
+    const filePath = join(backupDir, file)
+    await extract(filePath, { dir: backupDir })
+    await unlink(filePath)
+  }
+  moveFoldersContents(backupDir)
 
   console.log(`✅ Export downloaded and unzipped.`);
 };
