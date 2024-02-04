@@ -39,6 +39,10 @@ Automatically downloading backups from Notion requires two unique authentication
 
 **NOTE**: if you log out of your account or your session expires naturally, the `NOTION_TOKEN` will get invalidated and the backup will fail. In this case you need to obtain new tokens by repeating this process. There is currently no practical way to automize this until Notion decides to add a backup endpoint to their official API, at which point this script will be able to use a proper authentication token.
 
+## Refresh an expired token
+
+At some point, the GitHub pipeline will fail archiving your data. This is because the given `NOTION_TOKEN` token eventually expires. Follow steps 8., 9., 10., 11. again.
+
 ## How it works
 
 This repo contains a GitHub workflow that runs every day and for every push to this repo. The workflow will execute the script which makes an export request to Notion, waits for it to finish and downloads the workspace content to a temporary directory. The workflow will then commit this directory to the repository configured in the repo secrets.
